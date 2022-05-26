@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>坐标轴</title>
+<style>
+  body {
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+  <div id="canvasBox"></div>
+
+<script type="module">
+  import {
+    Scene,
+    PerspectiveCamera,
+    WebGLRenderer,
+    BoxGeometry,
+    MeshBasicMaterial,
+    Mesh,
+    AxesHelper
+  } from '../js/Three/Three.js'
+
+  // 场景
+  const scene = new Scene()
+
+  // 相机
+  const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+
+  // 渲染器
+  const renderer = new WebGLRenderer()
+
+  // 将渲染器的大小设置为窗口的大小
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  // 将渲染器绑定到指定的DOM元素中
+  document.getElementById('canvasBox').appendChild(renderer.domElement)
+
+  // 几何体
+  const geometry = new BoxGeometry()
+
+  // 网格基础材质，设置颜色
+  const material = new MeshBasicMaterial({color: 0xff2299})
+  const cube = new Mesh(geometry, material)
+  scene.add(cube)
+
+  // 设置摄像机在z轴上的距离
+  camera.position.x = -3
+  camera.position.y = 5
+  camera.position.z = 5
+
+  // 将摄像机的方向对准场景的中心点
+  camera.lookAt(scene.position)
+
+  // 适当的旋转一下立方体
+  cube.rotation.x += 0.8
+  cube.rotation.y += 0.8
+
+  // // 设置立方体位置
+  cube.position.x = 4
+  cube.position.y = 1
+  cube.position.z = 2
+
+
+  // 创建坐标轴
+  const axes = new AxesHelper(2)
+  // 设置坐标轴颜色
+  axes.setColors('pink', 0xf0ff00, 'rgb(60, 200, 130)')
+  // 将坐标轴添加到场景中
+  scene.add(axes)
+
+  // 将场景和相机添加到渲染器中并执行渲染
+  renderer.render(scene, camera)
+
+</script>
+</body>
+</html>
