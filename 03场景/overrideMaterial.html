@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>overrideMaterial 覆盖材质</title>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvasBox"></div>
+
+  <script type="module">
+    import {
+      Scene,
+      PerspectiveCamera,
+      WebGLRenderer,
+      BoxGeometry,
+      MeshBasicMaterial,
+      PlaneGeometry,
+      MeshLambertMaterial,
+      Mesh,
+      AmbientLight, // 环境光
+      SpotLight // 聚光灯
+    } from '../js/Three/Three.js'
+
+    // 场景
+    const scene = new Scene()
+
+    // 相机
+    const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
+
+    // 渲染器
+    const renderer = new WebGLRenderer()
+
+    // 设置渲染器的大小
+    renderer.setSize(window.innerWidth, window.innerHeight)
+
+    // 地面
+    const planeGeometry = new PlaneGeometry(60, 40, 1, 1)
+    const planeMaterial = new MeshLambertMaterial({ color: 0xffffff })
+    const plane = new Mesh(planeGeometry, planeMaterial)
+
+    plane.rotation.x = -0.5 * Math.PI // 旋转平面，让它看起来像地面
+    // 设置地面位置
+    plane.position.x = 2
+    plane.position.y = 0
+    plane.position.z = -10
+    // 将地面添加到场景中
+    scene.add(plane)
+
+    // 设置相机位置
+    camera.position.x = -70
+    camera.position.y = 30
+    camera.position.z = 5
+    // 将镜头锁定到地面上
+    camera.lookAt(scene.position)
+
+    // 环境光
+    const ambientLight = new AmbientLight(0x3c3c3c)
+    // 将环境光添加到场景中
+    scene.add(ambientLight)
+
+    // 聚光灯
+    const spotLight = new SpotLight(0xffffff, 1, 150, 120)
+    spotLight.position.set(-40, 60, -10)
+    // 将聚光灯添加到场景中
+    scene.add(spotLight)
+
+    // 立方体列表
+    let cubeList = []
+
+    // 循环出20个立方体
+    for (let i = 0; i < 20; i++) {
+      let cubeSize = Math.ceil((Math.random() * 3)) // 随机生成不同大小的立方体尺寸
+      let cubeGeometry = new BoxGeometry(cubeSize, cubeSize, cubeSize)
+      let r = Math.floor(Math.random()  * 256)
+      let g = Math.floor(Math.random() * 256)
+      let b = Math.floor(Math.random() * 256)
+      let color = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`
+      let cubeMaterial = new MeshLambertMaterial({
+        color // 设置随机颜色
+      })
+
+      // 生成立方体
+      let cube = new Mesh(cubeGeometry, cubeMaterial)
+
+      // 根据地面尺寸，随机设置立方体位置
+      cube.position.x = -30 + Math.round((Math.random() * planeGeometry.parameters.width))
+      cube.position.y = Math.round((Math.random() * 5))
+      cube.position.z = -30 + Math.round((Math.random() * planeGeometry.parameters.height))
+
+      // 将立方体添加到立方体列表中
+      cubeList.push(cube)
+    }
+
+    // 解构立方体列表，将列表中所有立方体添加到场景中
+    scene.add(...cubeList)
+
+    // 将场景和相机添加到渲染器中并执行渲染
+    renderer.render(scene, camera)
+
+    // 将渲染器添加到div中
+    document.getElementById('canvasBox').appendChild(renderer.domElement)
+
+    // 重置窗口尺寸
+    function onResize() {
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+
+    // 监听浏览器窗口尺寸变化
+    window.addEventListener('resize',onResize, false)
+  </script>
+</body>
+</html>

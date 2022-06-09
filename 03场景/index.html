@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>场景1</title>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvasBox"></div>
+
+  <script type="module">
+    import {
+      Scene,
+      PerspectiveCamera,
+      WebGLRenderer,
+      BoxGeometry,
+      MeshBasicMaterial,
+      Mesh
+    } from '../js/Three/Three.js'
+
+    // 场景
+    const scene = new Scene()
+
+    // 相机
+    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+
+    // 渲染器
+    const renderer = new WebGLRenderer()
+
+    // 设置渲染器的大小
+    renderer.setSize(window.innerWidth, window.innerHeight)
+
+    // 立方体
+    let geometry = new BoxGeometry(1, 1, 1)
+
+    // 网格基础材质，设置颜色
+    let material = new MeshBasicMaterial({color: 0x00ff00})
+
+    // 把立方几何体与基础材质进行组合后创建一个新的网格对象
+    let cube = new Mesh(geometry, material)
+    cube.name = 'hello'
+
+    // 把立方体网格添加到场景中
+    scene.add(cube)
+
+    // 设置相机z轴位置
+    camera.position.z = 5
+
+    // 将场景和相机添加到渲染器中并执行渲染
+    renderer.render(scene, camera)
+
+    let hello = scene.getObjectByName('hello')
+    // console.log(hello)
+
+    // 遍历所有元素
+    // scene.traverse(item => {
+    //   console.log(item)
+    // })
+
+    // 返回一个场景中所有对象的列表，包括摄像机和光源
+    console.log(scene.children)
+
+    // 将渲染器添加到div中
+    document.getElementById('canvasBox').appendChild(renderer.domElement)
+  </script>
+</body>
+</html>
